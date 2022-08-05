@@ -1,31 +1,31 @@
 import { GetStaticProps, NextPage } from "next";
 import api from "../services/api";
 
-export interface PokeApiI {
+export interface IPokeApi {
   count: number;
   next: string;
   previous: null;
-  results: PokemonInfoI[];
+  results: IPokemonInfo[];
 }
 
-export interface PokemonInfoI {
+export interface IPokemonInfo {
   name: string;
   url: string;
   id: number;
 }
 
-interface PropsI {
-  pokemons: PokemonInfoI[];
+interface IProps {
+  pokemons: IPokemonInfo[];
 }
 
-const Home: NextPage<PropsI> = ({ pokemons }) => {
+const Home: NextPage<IProps> = ({ pokemons }) => {
   return (
     <>
-      <div>
+      <ul>
         {pokemons.map((pokemon) => (
           <li key={pokemon.id}>{pokemon.name}</li>
         ))}
-      </div>
+      </ul>
     </>
   );
 };
@@ -33,13 +33,13 @@ const Home: NextPage<PropsI> = ({ pokemons }) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await api.get<PokeApiI>("/pokemon?limit=151");
+  const { data } = await api.get<IPokeApi>("/pokemon?limit=151");
 
-  const pokemons: PokemonInfoI[] = data.results.map((pokemon, i) => ({
+  const pokemons: IPokemonInfo[] = data.results.map((pokemon, i) => ({
     ...pokemon,
     id: i + 1,
   }));
-  
+
   return {
     props: {
       pokemons,
