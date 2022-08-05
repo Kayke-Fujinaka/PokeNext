@@ -1,7 +1,5 @@
+import { GetStaticProps, NextPage } from "next";
 import api from "../services/api";
-
-import { GetServerSideProps, NextPage } from "next";
-import React from "react";
 
 export interface PokeApiI {
   count: number;
@@ -14,7 +12,6 @@ export interface PokemonInfoI {
   name: string;
   url: string;
   id: number;
-  imagen: string;
 }
 
 interface PropsI {
@@ -35,14 +32,14 @@ const Home: NextPage<PropsI> = ({ pokemons }) => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get<PokeApiI>("/pokemon?limit=151");
 
   const pokemons: PokemonInfoI[] = data.results.map((pokemon, i) => ({
     ...pokemon,
     id: i + 1,
   }));
-
+  
   return {
     props: {
       pokemons,
